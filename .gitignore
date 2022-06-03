@@ -1,5 +1,20 @@
-# 编辑器路径
+## 编辑器路径
 .idea/
 
-# .py文件运行缓存路径
+## .py文件运行缓存路径
 __pycache__/
+
+## 文件
+# markdonw 生成的dpf
+*.pdf
+# 压缩包
+*.tar
+*.gz
+*.tar.gz
+*.zip
+*.rar
+
+
+
+## 测试
+di st/
