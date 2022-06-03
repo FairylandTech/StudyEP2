@@ -1,4 +1,9 @@
 # private
 私人库
 
->添加ssh, gpg
+# folder tree
+
+- CloudNotesAndCodes
+- PythonScript
+- ShellScript
+- templates
