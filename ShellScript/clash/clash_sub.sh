@@ -1,7 +1,7 @@
 #!/bin/bash
 # 局域网
 
-# 订阅可可云
+# 订阅
 sub_kk_cloud() {
   echo -e "Start downloads Sub link!"
   wget -O sub.yaml.src "$1"
