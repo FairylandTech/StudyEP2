@@ -35,7 +35,6 @@ output:
 3.由于画图需要,必须新边大于旧边(+2π再和2π取模)
 """
 from django.http import JsonResponse
-from django.shortcuts import render
 from math import pi, sin, cos, degrees
 import numpy as np
 import random
@@ -75,7 +74,7 @@ def safe_ground():
     # ground_r_big = float(request.POST.get('ground_r'))  # 区域整体半径 单位:公里
     ground_r_big = float(10)  # 区域整体半径 单位:公里
     # Number_of_Angle_segments = int(request.POST.get('Number_of_Angle_segments'))  # 角度分割数量
-    Number_of_Angle_segments = int(24)  # 角度分割数量
+    Number_of_Angle_segments = int(12)  # 角度分割数量
     # Number_of_radius_segments = int(request.POST.get('Number_of_radius_segments'))  # 半径分割数量
     Number_of_radius_segments = int(10)  # 半径分割数量
     # 障碍物相对圆心的位置
@@ -178,7 +177,7 @@ def safe_ground():
     big_sector_dict = {}
 
     # 构建数组,可视化圆形区域
-    temp = np.zeros((10, 24))
+    temp = np.zeros((10, 12))
     for flag_sector in flag_sector_set:
         # print([flag_sector // Number_of_Angle_segments, flag_sector % Number_of_Angle_segments])
         temp[flag_sector // Number_of_Angle_segments, flag_sector % Number_of_Angle_segments] = 1
@@ -458,7 +457,7 @@ def safe_ground():
             #         if mix_rho < 3.0:
             #             result_list[i][1] = 3.0
             #             sec_dev_res_list.append(result_list[i])
-    [print(i) for i in sec_dev_res_list]
+    [print(i) for i in result_list]
     # [print(i) for i in result_list]
     sec_dev_res_data = {"state": 200, "message": "Successfully", 'data': sec_dev_res_list}
     print(sec_dev_res_data)

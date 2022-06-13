@@ -1,5 +1,6 @@
 ## 编辑器路径
 .idea/
+.vscode/
 
 ## .pyc路径
 __pycache__/
