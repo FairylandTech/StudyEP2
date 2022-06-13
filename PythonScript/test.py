@@ -29,8 +29,8 @@ class BaseTest:
     @staticmethod
     def test():
         pass
-        x = 3.9999999999999996
-        xx = 3.0
+        radian = -0.6981317007977322
+        angle = radian * math.pi / 180
         print(type(x), type(xx))
         print(x - xx)
         

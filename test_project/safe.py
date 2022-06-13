@@ -46,6 +46,7 @@ import matplotlib.pyplot as plt
 import json
 import matplotlib
 import time
+import interval
 
 
 def suger(fun):
@@ -91,7 +92,7 @@ def safe_ground():
     # barrier_dict_list = '{"school":[[7.499,4.537856055185257]],"chemistry":[],"village":[[6.186,5.969026041820607],[5.096,1.5009831567151235]],"government":[],"warehouse":[],"traffic":[]}'
     barrier_dict_list = '{"school":[[7.578,4.974188368183839],[9.333,2.303834612632515]],"chemistry":[[8.276,6.213372137099813],[4.878,1.7453292519943295],[7.432,0.47123889803846897],[4.91,3.7699111843077517]],"village":[[10.386,3.3335788713091694],[5.983,0.3141592653589793],[6.262,0.5410520681182421],[4.037,4.974188368183839]],"government":[],"warehouse":[],"traffic":[]}'
     barrier_dict = json.loads(barrier_dict_list)
-    print(type(barrier_dict), barrier_dict)
+    # print(type(barrier_dict), barrier_dict)
 
     # 区分不同障碍物的安全半径
     safe_radius_school = barrier_radius_dict['school']  # 学校
@@ -436,23 +437,23 @@ def safe_ground():
     sec_dev_res_list = []
     new_list = []
     barrier_point = []
+    barrier_radian = []
     # 判断极径是否在敏感点上
     for i in barrier_dict.values():
         if i is not None:
             for j in i:
                 barrier_point.append(int(j[0]))
-    print(barrier_point)
+                barrier_radian.append(j[1])
+    # print(barrier_point)
     # 如果极径小于3, 就把最小极径的值设置为3
     for i in range(len(result_list)):
-        max_rho = int(result_list[i][0])
-        min_rho = int(result_list[i][1])
+        max_rho = result_list[i][0]
+        min_rho = result_list[i][1]
         if max_rho and min_rho not in barrier_point:
             if max_rho > min_rho:
-                if max_rho < 2.0:
-                    pass
-                else:
-                    if min_rho < 2.0:
-                        result_list[i][1] = 2.0
+                if max_rho > 3.0:
+                    if min_rho < 3.0:
+                        result_list[i][1] = 3.0
                         sec_dev_res_list.append(result_list[i])
                     else:
                         sec_dev_res_list.append(result_list[i])
@@ -460,21 +461,60 @@ def safe_ground():
     for i in range(len(sec_dev_res_list)):
         max_rho = sec_dev_res_list[i][0]
         min_rho = sec_dev_res_list[i][1]
-        # min_radian = sec_dev_res_list[i][2]
-        # max_radian = sec_dev_res_list[i][3]
-        # mix_angle = min_radian * 180 / math.pi
-        # max_angle = max_radian * 180 / math.pi
         if max_rho - min_rho > 1.5:
             new_list.append(sec_dev_res_list[i])
 
-    ## //
-    # [print(i) for i in sec_dev_res_list]
-    # print('-' * 50)
-    [print(i) for i in new_list]
-    # [print(i) for i in result_list]
-    sec_dev_res_data = {"state": 200, "message": "Successfully", 'data': new_list}
+    # 区间去重
+    sec_new_list = []
+    for new_list_index in range(len(new_list)):
+        start_point = new_list[new_list_index][0]
+        stop_point = new_list[new_list_index][1]
+        start_radian = new_list[new_list_index][2]
+        stop_radian = new_list[new_list_index][3]
+        for default in new_list:
+            point_index = interval.Interval(start_point, stop_point)
+            radian_index = interval.Interval(start_radian, stop_radian)
+            point_all = interval.Interval(default[0], default[1])
+            radian_all = interval.Interval(default[2], default[3])
+            radian_all_set = (start_radian, stop_radian, default[2], default[3])
+            point_all_set = (start_point, stop_point, default[0], default[1])
+            if point_index.overlaps(point_all):
+                if radian_index.overlaps(radian_all):
+                    default[0] = max(point_all_set)
+                    default[1] = min(point_all_set)
+                    default[2] = min(radian_all_set)
+                    default[3] = max(radian_all_set)
+                    radian_set = (min(radian_all_set), max(radian_all_set))
+                    if min(radian_all_set) and max(radian_all_set) > 0:
+                        radian_set = (min(radian_all_set) + 2 * math.pi, max(radian_all_set) + 2 * math.pi)
+                    for i in barrier_radian:
+                        # if i < 0:
+                            # i += 2 * math.pi
+                        if i in radian_set:
+                            if min(radian_all_set) and max(radian_all_set) > 0:
+                                if mix(radian_all_set) - i > i - max(radian_all_set):
+                                    default[2] = i - 0.25
+                                else:
+                                    default[3] = i - 0.25
+                            else:
+                                if min(radian_all_set) + i > i + max(radian_all_set):
+                                    default[2] = i + 0.25
+                                else:
+                                    default[3] = i + 0.25
+                    sec_new_list.append(default)
+    print(new_list)
+    sec_new_list = [list(t) for t in set(tuple(_) for _ in sec_new_list)]
+    # print(sec_new_list)
+    print(len(sec_new_list))
+
+
+
+
+    # [print(i) for i in new_list]
+    sec_dev_res_data = {"state": 200, "message": "Successfully", 'data': sec_new_list}
     print(sec_dev_res_data)
-    return new_list
+    # return new_list
+    return True
 
     # for i in new_list:
     #     print(i[2])
