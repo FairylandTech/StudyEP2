@@ -34,6 +34,8 @@ output:
     后绘制的为新边,先绘制的为旧边,按照代码逻辑,左边为旧边,右边为新边
 3.由于画图需要,必须新边大于旧边(+2π再和2π取模)
 """
+import math
+
 from django.http import JsonResponse
 from math import pi, sin, cos, degrees
 import numpy as np
@@ -74,19 +76,20 @@ def safe_ground():
     # ground_r_big = float(request.POST.get('ground_r'))  # 区域整体半径 单位:公里
     ground_r_big = float(10)  # 区域整体半径 单位:公里
     # Number_of_Angle_segments = int(request.POST.get('Number_of_Angle_segments'))  # 角度分割数量
-    Number_of_Angle_segments = int(12)  # 角度分割数量
+    Number_of_Angle_segments = int(18)  # 角度分割数量
     # Number_of_radius_segments = int(request.POST.get('Number_of_radius_segments'))  # 半径分割数量
-    Number_of_radius_segments = int(10)  # 半径分割数量
+    Number_of_radius_segments = int(5)  # 半径分割数量
     # 障碍物相对圆心的位置
     try:
-        barrier_radius_dict_list = '{"school":2,"chemistry":2,"village":3,"government":3,"warehouse":3,"traffic":2}'
+        barrier_radius_dict_list = '{"school":1,"chemistry":1,"village":1,"government":1,"warehouse":1,"traffic":1}'
         # barrier_radius_dict = json.loads(request.POST.get('barrier_radius_dict'))
         barrier_radius_dict = json.loads(barrier_radius_dict_list)
     except Exception as e:
         return JsonResponse({"state": 400, "message": "failed", 'data': 'barrier_list参数错误'})
     # 遍历障碍物
     # barrier_dict = json.loads(request.POST.get("barrier_dict"))
-    barrier_dict_list = '{"school":[[7.499,4.537856055185257]],"chemistry":[],"village":[[6.186,5.969026041820607],[5.096,1.5009831567151235]],"government":[],"warehouse":[],"traffic":[]}'
+    # barrier_dict_list = '{"school":[[7.499,4.537856055185257]],"chemistry":[],"village":[[6.186,5.969026041820607],[5.096,1.5009831567151235]],"government":[],"warehouse":[],"traffic":[]}'
+    barrier_dict_list = '{"school":[[7.578,4.974188368183839],[9.333,2.303834612632515]],"chemistry":[[8.276,6.213372137099813],[4.878,1.7453292519943295],[7.432,0.47123889803846897],[4.91,3.7699111843077517]],"village":[[10.386,3.3335788713091694],[5.983,0.3141592653589793],[6.262,0.5410520681182421],[4.037,4.974188368183839]],"government":[],"warehouse":[],"traffic":[]}'
     barrier_dict = json.loads(barrier_dict_list)
     print(type(barrier_dict), barrier_dict)
 
@@ -100,8 +103,9 @@ def safe_ground():
 
     # 所有半径列表
     ground_r_array = np.linspace(0, ground_r_big, Number_of_radius_segments + 1)  # +1是因为101个边才能构建100个扇形
+    # print(ground_r_array)
     # 角度分割
-    point_array = np.linspace(0, 360, Number_of_Angle_segments + 1)
+    point_array = np.linspace(0, 360, Number_of_Angle_segments + 1) #
 
     # 保存扇形的位置,扇形编号:{左上,右上,左下,右下}
     sector_dict = {}
@@ -127,6 +131,7 @@ def safe_ground():
             down_right = (r_s * cos(p_s / 180 * pi), r_s * sin(p_s / 180 * pi))  # 右下角点
             # 扇形编号 左下,右下,左上,右上
             sector_dict[Number_of_Angle_segments * ground_r + point] = [down_left, down_right, top_left, top_right]
+            # sector_dict[Number_of_Angle_segments * ground_r + point] = [top_right, down_right, down_left, top_left]
 
     # 被标记的扇形,可能有重复的,故使用集合
     flag_sector_set = set()
@@ -177,7 +182,7 @@ def safe_ground():
     big_sector_dict = {}
 
     # 构建数组,可视化圆形区域
-    temp = np.zeros((10, 12))
+    temp = np.zeros((10, 18))
     for flag_sector in flag_sector_set:
         # print([flag_sector // Number_of_Angle_segments, flag_sector % Number_of_Angle_segments])
         temp[flag_sector // Number_of_Angle_segments, flag_sector % Number_of_Angle_segments] = 1
@@ -429,38 +434,52 @@ def safe_ground():
     res_data = {"state": 200, "message": "Successfully", 'data': result_list}
 
     sec_dev_res_list = []
+    new_list = []
     barrier_point = []
+    # 判断极径是否在敏感点上
     for i in barrier_dict.values():
         if i is not None:
             for j in i:
                 barrier_point.append(int(j[0]))
     print(barrier_point)
+    # 如果极径小于3, 就把最小极径的值设置为3
     for i in range(len(result_list)):
         max_rho = int(result_list[i][0])
-        mix_rho = int(result_list[i][1])
-        if max_rho and mix_rho not in barrier_point:
-            if max_rho > mix_rho:
-                if max_rho < 3.0:
+        min_rho = int(result_list[i][1])
+        if max_rho and min_rho not in barrier_point:
+            if max_rho > min_rho:
+                if max_rho < 2.0:
                     pass
                 else:
-                    if mix_rho < 3.0:
-                        result_list[i][1] = 3.0
+                    if min_rho < 2.0:
+                        result_list[i][1] = 2.0
                         sec_dev_res_list.append(result_list[i])
                     else:
                         sec_dev_res_list.append(result_list[i])
+    # 去除极径小于1的极坐标数据组
+    for i in range(len(sec_dev_res_list)):
+        max_rho = sec_dev_res_list[i][0]
+        min_rho = sec_dev_res_list[i][1]
+        # min_radian = sec_dev_res_list[i][2]
+        # max_radian = sec_dev_res_list[i][3]
+        # mix_angle = min_radian * 180 / math.pi
+        # max_angle = max_radian * 180 / math.pi
+        if max_rho - min_rho > 1.5:
+            new_list.append(sec_dev_res_list[i])
 
-            # if max_rho and mix_rho > 3.0:
-            #     sec_dev_res_list.append(result_list[i])
-            # if max_rho < 3.0:
-            #     pass
-            #     if max_rho > 3.0:
-            #         if mix_rho < 3.0:
-            #             result_list[i][1] = 3.0
-            #             sec_dev_res_list.append(result_list[i])
-    [print(i) for i in result_list]
+    ## //
+    # [print(i) for i in sec_dev_res_list]
+    # print('-' * 50)
+    [print(i) for i in new_list]
     # [print(i) for i in result_list]
-    sec_dev_res_data = {"state": 200, "message": "Successfully", 'data': sec_dev_res_list}
+    sec_dev_res_data = {"state": 200, "message": "Successfully", 'data': new_list}
     print(sec_dev_res_data)
+    return new_list
+
+    # for i in new_list:
+    #     print(i[2])
+    #     print(i[3])
+    #     print('-' * 50)
 
     # return JsonResponse(data=res_data, json_dumps_params={'ensure_ascii': False})
     # return res_data

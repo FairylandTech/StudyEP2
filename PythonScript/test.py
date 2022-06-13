@@ -25,6 +25,14 @@ class BaseTest:
         f_n = int(input('N:'))
         return_value = BaseTest.testing(defaults=f_m) // BaseTest.testing(defaults=f_n) // BaseTest.testing(defaults=(f_m-f_n))
         return return_value
+
+    @staticmethod
+    def test():
+        pass
+        x = 3.9999999999999996
+        xx = 3.0
+        print(type(x), type(xx))
+        print(x - xx)
         
         
 
@@ -33,6 +41,7 @@ if __name__ == '__main__':
     pass
     # while True:
     # print(BaseTest.testing(defaults=4))
-    print(BaseTest.foo())
+    # print(BaseTest.foo())
+    print(BaseTest.test())
     
 
