@@ -2,6 +2,7 @@ from calendar import c
 import subprocess
 import os, sys, path
 import math
+import interval
 
 class BaseTest:
 
@@ -29,10 +30,13 @@ class BaseTest:
     @staticmethod
     def test():
         pass
-        radian = -0.6981317007977322
-        angle = radian * math.pi / 180
-        print(type(x), type(xx))
-        print(x - xx)
+        l_1 = [5, 10]
+        l_2 = (0, 15)
+        l_index = interval.Interval(8, 11)
+        l_all = interval.Interval(6,10)
+        # print(l_1[0])
+        va = 6 in l_all
+        print(va)
         
         
 
