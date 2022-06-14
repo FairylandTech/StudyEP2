@@ -459,14 +459,15 @@ def safe_ground():
                         sec_dev_res_list.append(result_list[i])
     # 去除极径小于1的极坐标数据组
     for i in range(len(sec_dev_res_list)):
-        max_rho = sec_dev_res_list[i][0]
-        min_rho = sec_dev_res_list[i][1]
+        max_rho = int(sec_dev_res_list[i][0])
+        min_rho = int(sec_dev_res_list[i][1])
         if max_rho - min_rho > 1.5:
             new_list.append(sec_dev_res_list[i])
 
     # 区间去重
     sec_new_list = []
     for new_list_index in range(len(new_list)):
+        print(new_list[new_list_index])
         start_point = new_list[new_list_index][0]
         stop_point = new_list[new_list_index][1]
         start_radian = new_list[new_list_index][2]
@@ -476,33 +477,17 @@ def safe_ground():
             radian_index = interval.Interval(start_radian, stop_radian)
             point_all = interval.Interval(default[0], default[1])
             radian_all = interval.Interval(default[2], default[3])
-            radian_all_set = (start_radian, stop_radian, default[2], default[3])
             point_all_set = (start_point, stop_point, default[0], default[1])
+            radian_all_set = (start_radian, stop_radian, default[2], default[3])
             if point_index.overlaps(point_all):
-                if radian_index.overlaps(radian_all):
-                    default[0] = max(point_all_set)
-                    default[1] = min(point_all_set)
+                # default[1] = stop_point
+                if radian_index.overlaps(radian_all) and default[0] == start_point and default[1] == stop_point:
+                    # default[0] = max(point_all_set)
+                    # default[1] = min(point_all_set)
                     default[2] = min(radian_all_set)
                     default[3] = max(radian_all_set)
-                    radian_set = (min(radian_all_set), max(radian_all_set))
-                    if min(radian_all_set) and max(radian_all_set) > 0:
-                        radian_set = (min(radian_all_set) + 2 * math.pi, max(radian_all_set) + 2 * math.pi)
-                    for i in barrier_radian:
-                        # if i < 0:
-                            # i += 2 * math.pi
-                        if i in radian_set:
-                            if min(radian_all_set) and max(radian_all_set) > 0:
-                                if mix(radian_all_set) - i > i - max(radian_all_set):
-                                    default[2] = i - 0.25
-                                else:
-                                    default[3] = i - 0.25
-                            else:
-                                if min(radian_all_set) + i > i + max(radian_all_set):
-                                    default[2] = i + 0.25
-                                else:
-                                    default[3] = i + 0.25
                     sec_new_list.append(default)
-    print(new_list)
+                # sec_new_list.append(default)
     sec_new_list = [list(t) for t in set(tuple(_) for _ in sec_new_list)]
     # print(sec_new_list)
     print(len(sec_new_list))
