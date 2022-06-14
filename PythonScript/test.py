@@ -1,3 +1,4 @@
+from calendar import c
 import subprocess
 import os, sys, path
 import math
@@ -8,24 +9,39 @@ class BaseTest:
         pass
 
     @staticmethod
-    def testing():
+    def testing(defaults=None):
         pass
-        num = int(input('输入一个正整数:'))
-        sqrt = math.sqrt(num)
-        status_code = True
-        # num = 1
-        for i in range(2, num):
-            if num % i == 0:
-                status_code = False
-                break
-        if status_code and num != 1:
-            print(True)
+        if type(defaults) == int:
+            result = math.factorial(defaults)
+            return result
         else:
-            print(False)
+            return_value = '参数有误'
+            return return_value
+            
+    @staticmethod
+    def foo():
+        pass
+        f_m = int(input('M:'))
+        f_n = int(input('N:'))
+        return_value = BaseTest.testing(defaults=f_m) // BaseTest.testing(defaults=f_n) // BaseTest.testing(defaults=(f_m-f_n))
+        return return_value
+
+    @staticmethod
+    def test():
+        pass
+        radian = -0.6981317007977322
+        angle = radian * math.pi / 180
+        print(type(x), type(xx))
+        print(x - xx)
+        
+        
 
 
 if __name__ == '__main__':
+    pass
     # while True:
-    BaseTest.testing()
-
+    # print(BaseTest.testing(defaults=4))
+    # print(BaseTest.foo())
+    print(BaseTest.test())
+    
 
