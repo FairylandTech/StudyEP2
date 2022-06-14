@@ -92,7 +92,8 @@ def safe_ground():
     # barrier_dict = json.loads(request.POST.get("barrier_dict"))
     # barrier_dict_list = '{"school":[[7.499,4.537856055185257]],"chemistry":[],"village":[[6.186,5.969026041820607],[5.096,1.5009831567151235]],"government":[],"warehouse":[],"traffic":[]}'
     # barrier_dict_list = '{"school":[[7.578,4.974188368183839],[9.333,2.303834612632515]],"chemistry":[[8.276,6.213372137099813],[4.878,1.7453292519943295],[7.432,0.47123889803846897],[4.91,3.7699111843077517]],"village":[[10.386,3.3335788713091694],[5.983,0.3141592653589793],[6.262,0.5410520681182421],[4.037,4.974188368183839]],"government":[],"warehouse":[],"traffic":[]}'
-    barrier_dict_list = '{"school":[[7.578,4.974188368183839],[9.333,2.303834612632515],[7.387,4.4505895925855405],[3.201,0.8028514559173916]],"chemistry":[[8.276,6.213372137099813],[4.878,1.7453292519943295],[7.432,0.47123889803846897],[4.91,3.7699111843077517],[5.037,2.6179938779914944]],"village":[[10.386,3.3335788713091694],[5.983,0.3141592653589793],[6.262,0.5410520681182421],[5.974,5.567600313861911]],"government":[],"warehouse":[],"traffic":[]}'
+    # barrier_dict_list = '{"school":[[7.578,4.974188368183839],[9.333,2.303834612632515],[7.387,4.4505895925855405],[3.201,0.8028514559173916]],"chemistry":[[8.276,6.213372137099813],[4.878,1.7453292519943295],[7.432,0.47123889803846897],[4.91,3.7699111843077517],[5.037,2.6179938779914944]],"village":[[10.386,3.3335788713091694],[5.983,0.3141592653589793],[6.262,0.5410520681182421],[5.974,5.567600313861911]],"government":[],"warehouse":[],"traffic":[]}'
+    barrier_dict_list = '{"school":[[7.578,4.974188368183839],[9.333,2.303834612632515],[7.387,4.4505895925855405],[3.201,0.8028514559173916]],"chemistry":[[8.276,6.213372137099813],[4.878,1.7453292519943295],[7.432,0.47123889803846897],[4.91,3.7699111843077517],[5.037,2.6179938779914944],[9.461,1.0471975511965976],[10.041,5.497787143782138],[10.066,1.361356816555577],[3.716,5.602506898901797]],"village":[[10.386,3.3335788713091694],[5.983,0.3141592653589793],[6.262,0.5410520681182421],[5.974,5.567600313861911],[5.943,3.12413936106985],[9.82,4.136430327226561],[6.588,0.9075712110370514],[5.069,2.1642082724729685]],"government":[],"warehouse":[],"traffic":[]}'
     barrier_dict = json.loads(barrier_dict_list)
     # print(type(barrier_dict), barrier_dict)
 
@@ -145,7 +146,7 @@ def safe_ground():
             cn1 = cmath.rect(*barrier)
             barrier_x, barrier_y = cn1.real, cn1.imag,
             # 在障碍物的安全区范围取100个点,获得这100个点相对于障碍物的坐标,然后再转换为相对于圆心的坐标,计算在哪个扇形中
-            for i in range(101):
+            for i in range(10001):
                 x = random.uniform(-eval('safe_radius_{}'.format(barrier_type)),
                                    eval('safe_radius_{}'.format(barrier_type)))
                 y = random.uniform(-eval('safe_radius_{}'.format(barrier_type)),
@@ -435,6 +436,7 @@ def safe_ground():
     # plt.show()
     # [print(i) for i in result_list]
     res_data = {"state": 200, "message": "Successfully", 'data': result_list}
+    # print(result_list)
 
     # 障碍物极径列表
     barrier_point = []
@@ -493,117 +495,68 @@ def safe_ground():
         result_list_temp_3[i][0] = round(result_list_temp_3[i][0], 1)
         result_list_temp_3[i][1] = round(result_list_temp_3[i][1], 1)
     # print(f'3:ρ(大)-ρ(小)>1.5KM, 优化极径精度-->{len(result_list_temp_3)}')
+    # print(result_list_temp_3)
     # 区间去重
-    sec_new_list = []
-    res_list = []
-    for new_list_index in range(len(result_list_temp_3)):
-        start_point = result_list_temp_3[new_list_index][0]
-        stop_point = result_list_temp_3[new_list_index][1]
-        start_radian = result_list_temp_3[new_list_index][2]
-        stop_radian = result_list_temp_3[new_list_index][3]
-        for default in result_list_temp_3:
-            point_index = interval.Interval(start_point, stop_point)
-            # point_index = [start_point, stop_point]
-            point_index_cp = [start_point, stop_point]
-            # radian_index = [start_radian, stop_radian]
-            radian_index = interval.Interval(start_radian, stop_radian)
-            radian_index_cp = [start_radian, stop_radian]
-            # point_all = [default[0], default[1]]
-            point_all = interval.Interval(default[0], default[1])
-            point_all_cp = [default[0], default[1]]
-            # radian_all = [default[2], default[3]]
-            radian_all = interval.Interval(default[2], default[3])
-            radian_all_cp = [default[2], default[3]]
-            point_all_set = (start_point, stop_point, default[0], default[1])
-            radian_all_set = (start_radian, stop_radian, default[2], default[3])
-            if start_point != default[0] and stop_point != default[1] and start_radian != default[2] and stop_radian != default[3]:
-                # 极径
-                if point_index in point_all:
-                    if radian_all_cp[0] in radian_index:
-                        default[2] = stop_radian
-                    if radian_index in radian_all:
-                        default[0] = start_point = max(point_all_set)
-                        default[1] = stop_point = min(point_all_set)
-                        default[2] = start_radian = min(radian_all_set)
-                        default[3] = stop_radian = max(radian_all_set)
-                # 弧度
-                if radian_index in radian_all:
-                    start_point = default[1]
-                    if radian_all_cp[0] in radian_index:
-                        default[2] = stop_radian
-                    if start_radian == default[2] and stop_radian == default[3]:
-                        start_point = default[0] = max(point_all_set)
-                        stop_point = default[1] = min(point_all_set)
-                sec_new_list.append(result_list_temp_3[new_list_index])
+    for result_list_temp_3_index in range(len(result_list_temp_3)):
+        contrast_index = result_list_temp_3_index + 1
+        start_radius = result_list_temp_3[result_list_temp_3_index][0]
+        stop_radius = result_list_temp_3[result_list_temp_3_index][1]
+        start_radian = result_list_temp_3[result_list_temp_3_index][2]
+        stop_radian = result_list_temp_3[result_list_temp_3_index][3]
+        if contrast_index < len(result_list_temp_3):
+            interval_radius = interval.Interval(result_list_temp_3[contrast_index][0],
+                                                result_list_temp_3[contrast_index][1])
+            interval_radian = interval.Interval(result_list_temp_3[contrast_index][2],
+                                                result_list_temp_3[contrast_index][3])
+        else:
+            contrast_index = 1
+            interval_radius = interval.Interval(result_list_temp_3[contrast_index][0],
+                                                result_list_temp_3[contrast_index][1])
+            interval_radian = interval.Interval(result_list_temp_3[contrast_index][2],
+                                                result_list_temp_3[contrast_index][3])
+        if start_radian in interval_radian:
+            if stop_radius == result_list_temp_3[contrast_index][1]:
+                pass
+            else:
+                result_list_temp_3[result_list_temp_3_index + 1][2] = stop_radian
+            if stop_radian == result_list_temp_3[contrast_index][3]:
+                start_radius_set = (start_radius, result_list_temp_3[contrast_index][0])
+                stop_radius_set = (stop_radius, result_list_temp_3[contrast_index][1])
+                result_list_temp_3[contrast_index][0] = max(start_radius_set)
+                result_list_temp_3[contrast_index][1] = min(stop_radius_set)
+            else:
+                pass
+                # print(result_list_temp_3[result_list_temp_3_index])
+        else:
+            pass
+            # print(result_list_temp_3[result_list_temp_3_index])
+        if start_radian == result_list_temp_3[contrast_index][2] and stop_radian == result_list_temp_3[contrast_index][3]:
+            temp_radius_set = (start_radius, stop_radius, result_list_temp_3[contrast_index][0], result_list_temp_3[contrast_index][1])
+            result_list_temp_3[contrast_index][0] = max(temp_radius_set)
+            result_list_temp_3[contrast_index][1] = min(temp_radius_set)
+            result_list_temp_3[result_list_temp_3_index][0] = max(temp_radius_set)
+            result_list_temp_3[result_list_temp_3_index][1] = min(temp_radius_set)
 
-    for new_list_index in range(len(sec_new_list)):
-        start_point = sec_new_list[new_list_index][0]
-        stop_point = sec_new_list[new_list_index][1]
-        start_radian = sec_new_list[new_list_index][2]
-        stop_radian = sec_new_list[new_list_index][3]
-        for default in sec_new_list:
-            point_index = interval.Interval(start_point, stop_point)
-            point_index_cp = [start_point, stop_point]
-            radian_index = interval.Interval(start_radian, stop_radian)
-            radian_index_cp = [start_radian, stop_radian]
-            point_all = interval.Interval(default[0], default[1])
-            point_all_cp = [default[0], default[1]]
-            radian_all = interval.Interval(default[2], default[3])
-            radian_all_cp = [default[2], default[3]]
-            point_all_set = (start_point, stop_point, default[0], default[1])
-            radian_all_set = (start_radian, stop_radian, default[2], default[3])
-            if start_point != default[0] and stop_point != default[1] and start_radian != default[2] and stop_radian != default[3]:
-                # 极径
-                if point_index in point_all:
-                    if radian_all_cp[0] in radian_index:
-                        default[2] = stop_radian
-                    if radian_index in radian_all:
-                        default[0] = start_point = max(point_all_set)
-                        default[1] = stop_point = min(point_all_set)
-                        default[2] = start_radian = min(radian_all_set)
-                        default[3] = stop_radian = max(radian_all_set)
-                # 弧度
-                if radian_index in radian_all:
-                    start_point = default[1]
-                    if radian_all_cp[0] in radian_index:
-                        default[2] = stop_radian
-                    if start_radian == default[2] and stop_radian == default[3]:
-                        start_point = default[0] = max(point_all_set)
-                        stop_point = default[1] = min(point_all_set)
-                res_list.append(sec_new_list[new_list_index])
-
+        if result_list_temp_3[result_list_temp_3_index][2] != result_list_temp_3[result_list_temp_3_index][3]:
+            result_list_temp_4.append(result_list_temp_3[result_list_temp_3_index])
     # 列表去重
-    res_list = [list(t) for t in set(tuple(_) for _ in res_list)]
+    result_list_temp_4 = [list(t) for t in set(tuple(_) for _ in result_list_temp_4)]
     # 列表排序
-    res_list.sort(key=operator.itemgetter(2))
+    result_list_temp_4.sort(key=operator.itemgetter(2))
     # 返回值
-    sec_dev_res_data = {"state": 200, "message": "Successfully", 'data': res_list}
-    # print('-' * 50)
-    # print(sec_dev_res_data)
-    # print(len(sec_new_list))
-    # print('-' * 50)
-    # [print(i) for i in result_list_temp_3]
-    # print()
-    # [print(i) for i in sec_new_list]
-    # return new_list
-    # print('-' * 50)
-    # print(len(sec_new_list))
+    sec_dev_res_data = {"state": 200, "message": "Successfully", 'data': result_list_temp_4}
     return sec_dev_res_data
-
-    # for i in new_list:
-    #     print(i[2])
-    #     print(i[3])
-    #     print('-' * 50)
-
     # return JsonResponse(data=res_data, json_dumps_params={'ensure_ascii': False})
     # return res_data
 
 
 if __name__ == '__main__':
-    for num in range(10):
-        if num == 9:
-            print(safe_ground())
-        else:
-            safe_ground()
+    # for num in range(10):
+    #     if num == 9:
+    #         print(safe_ground())
+    #     else:
+    #         safe_ground()
+    print(safe_ground())
+
 
 

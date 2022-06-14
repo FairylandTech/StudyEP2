@@ -30,13 +30,19 @@ class BaseTest:
     @staticmethod
     def test():
         pass
+        data_list = [[10.0, 6.0, 2.792526803190927, 3.141592653589793], [8.0, 3.0, 3.141592653589793, 3.4906585039886586]]
         l_1 = [5, 10]
         l_2 = (0, 15)
-        l_index = interval.Interval(8, 11)
-        l_all = interval.Interval(6,10)
+        l_index = interval.Interval(10, 6)
+        l_all = interval.Interval(8,6)
         # print(l_1[0])
-        va = 6 in l_all
+        va = l_index.join(l_all)
+        # for i in va:
+        #     print(i)
+        x = min(va)
+        print(type(va))
         print(va)
+        print(x)
         
         
 
