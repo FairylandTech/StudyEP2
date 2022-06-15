@@ -113,6 +113,11 @@ def change(list_data,barrier_dict):
     # print(result_list_temp_3)
     # 区间去重
     for result_list_temp_3_index in range(len(result_list_temp_3)):
+        line_1_temp = [(result_list_temp_3[result_list_temp_3_index][0], result_list_temp_3[result_list_temp_3_index][1]),
+                       ()]
+        line_2_temp = [result_list_temp_3[result_list_temp_3_index][1], result_list_temp_3[result_list_temp_3_index][2]]
+        line_3_temp = [result_list_temp_3[result_list_temp_3_index][2], result_list_temp_3[result_list_temp_3_index][3]]
+        line_4_temp = [result_list_temp_3[result_list_temp_3_index][3], result_list_temp_3[result_list_temp_3_index][0]]
         contrast_index = result_list_temp_3_index + 1
         start_radius = result_list_temp_3[result_list_temp_3_index][0]
         stop_radius = result_list_temp_3[result_list_temp_3_index][1]
@@ -123,12 +128,20 @@ def change(list_data,barrier_dict):
                                                 result_list_temp_3[contrast_index][1])
             interval_radian = interval.Interval(result_list_temp_3[contrast_index][2],
                                                 result_list_temp_3[contrast_index][3])
+            line_1_contrast_temp = [result_list_temp_3[contrast_index][0], result_list_temp_3[contrast_index][1]]
+            line_2_contrast_temp = [result_list_temp_3[contrast_index][1], result_list_temp_3[contrast_index][2]]
+            line_3_contrast_temp = [result_list_temp_3[contrast_index][2], result_list_temp_3[contrast_index][3]]
+            line_4_contrast_temp = [result_list_temp_3[contrast_index][3], result_list_temp_3[contrast_index][0]]
         else:
             contrast_index = 1
             interval_radius = interval.Interval(result_list_temp_3[contrast_index][0],
                                                 result_list_temp_3[contrast_index][1])
             interval_radian = interval.Interval(result_list_temp_3[contrast_index][2],
                                                 result_list_temp_3[contrast_index][3])
+            line_1_contrast_temp = [result_list_temp_3[contrast_index][0], result_list_temp_3[contrast_index][1]]
+            line_2_contrast_temp = [result_list_temp_3[contrast_index][1], result_list_temp_3[contrast_index][2]]
+            line_3_contrast_temp = [result_list_temp_3[contrast_index][2], result_list_temp_3[contrast_index][3]]
+            line_4_contrast_temp = [result_list_temp_3[contrast_index][3], result_list_temp_3[contrast_index][0]]
         if start_radian in interval_radian:
             if stop_radius == result_list_temp_3[contrast_index][1]:
                 # temp_interval = interval.Interval(start_radius, stop_radius)
@@ -555,7 +568,7 @@ def safe_ground():
     f_1 = change(result_list, barrier_dict=barrier_dict)
     # f_2 = change(f_1, barrier_dict=barrier_dict)
     # f_3 = change(f_2, barrier_dict=barrier_dict)
-
+    [print(i) for i in f_1]
 
     # 返回值
     f_1 = {"state": 200, "message": "Successfully", 'data': f_1}
