@@ -38,7 +38,7 @@ class BaseTest:
     @staticmethod
     def fibonacci_sequence():
         """
-        Fibonacci sequence
+        Fibonacci sequence : 斐波纳契数列
         :return:
         """
         a, b = 0, 1
@@ -52,6 +52,9 @@ if __name__ == '__main__':
     """
     This is the main function.
     """
-    print(BaseTest.fibonacci_sequence())
+    # 练习
+    items1 = dict(one=1, two=2, three=3, four=4)
+    print(items1)
+
 
 
