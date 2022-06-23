@@ -95,7 +95,7 @@ def change(list_data,barrier_dict):
                     else:
                         pass
                 else:
-                    del result_list[i]
+                    del result_list_temp_1[i]
         result_list_temp_2.append(result_list_temp_1[i])
     # print(f'2:最小极径>3-->{len(result_list_temp_2)}')
     # ρ(大)-ρ(小)>1.5KM, 优化极径精度
