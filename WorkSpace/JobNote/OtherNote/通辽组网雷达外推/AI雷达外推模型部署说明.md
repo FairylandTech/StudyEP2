@@ -20,7 +20,8 @@
 >
 > 步骤二:
 >
-> > 写入 `blacklist nouveau` 和 `options nouveau modeset=0`
+>> 写入 `blacklist nouveau` 和 `options nouveau modeset=0`
+>>
 
 - 更新 `sudo update-initramfs -u`
 - 重启 `reboot`
@@ -187,11 +188,10 @@ pip install -r requirements_new.txt
 1. 获取CUDA版本
 2. 根据CUDA的版本获取[PyTorch](https://pytorch.org), 执行<kbd>Run this Command</kbd>
 
->**说明**: <font color="red">Package</font>选择<kbd>Pip</kbd>
-> 
->安装是若提示找不到pip3, 则用pip代替(pip install .........)
+> **说明**: <font color="red">Package</font>选择<kbd>Pip</kbd>
+>
+> 安装是若提示找不到pip3, 则用pip代替(pip install .........)
 
 <img src="./static/img/pytorch_install.png" alt="PyTorch_install" title="Image"/>
 
-
-
+### 4. 运行
