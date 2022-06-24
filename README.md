@@ -1,23 +1,10 @@
-# private
+# Private Storage
 
-私人库
+AliceUserStorage
 
-# branches
+## branches
 
-1. ReleaseMaster
-2. AliceChangeLevel.Master
-3. WorkSpaceLevel.node-1
-4. AloneBranch.Master
+1. ReleaseMaster(Master)
+2. AliceChangeLevel.Master(Developer)
 
-# folder tree
 
-- CloudNotesAndCodes
-- PythonScript
-- ShellScript
-- templates
-- TestFolder
-- workspace
-
-## temp project
-
-- test_project
