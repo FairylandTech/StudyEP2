@@ -25,7 +25,7 @@ restart_clash() {
 }
 
 # __main__
-cd ~/.config/clash || mkdir -p ~/.config/clash && cd ~/.config/clash || exit
+cd ~/.config/clash || mkdir -p ~/.config/clash && cd ~/.config/clash || pwd
 if [ "$(find ./ -name "Country.mmdb" | wc -l)" == 0 ]; then
   echo -e "State Downloads \"Country.mmdb\" file"
   wget "https://file.share.alicehome.ltd/data/file/clash/Country.mmdb"
