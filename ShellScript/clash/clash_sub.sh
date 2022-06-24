@@ -8,6 +8,8 @@ sub_kk_cloud() {
   cp sub.yaml.src sub.yaml
   sed -i '1i mixed-port: 1080' sub.yaml
   sed -i 's/log-level: info/log-level: debug/g' sub.yaml
+  sed -i 's/external-controller: :9090/external-controller: :56011/g' sub.yaml
+  sed -i 's/external-controller: 127.0.0.1:9090/external-controller: 0.0.0.0:56011/g' sub.yaml
   cp sub.yaml config.yaml
 }
 
