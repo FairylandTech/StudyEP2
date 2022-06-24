@@ -1,4 +1,3 @@
-from calendar import c
 import subprocess
 import os, sys, path
 import math
@@ -53,8 +52,9 @@ if __name__ == '__main__':
     This is the main function.
     """
     # 练习
-    items1 = dict(one=1, two=2, three=3, four=4)
-    print(items1)
+
+
+
 
 
 
