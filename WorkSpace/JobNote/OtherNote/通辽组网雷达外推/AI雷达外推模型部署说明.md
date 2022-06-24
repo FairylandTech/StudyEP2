@@ -128,13 +128,18 @@ sudo service lightdm stop
 
 ```bash
 ## 安装
+# 国内源
 wget https://mirrors.tuna.tsinghua.edu.cn/anaconda/archive/Anaconda3-5.3.1-Linux-x86_64.sh
-chmod 755 Anaconda3-5.3.1-Linux-x86_64.sh
-./Anaconda3-5.3.1-Linux-x86_64.sh  # 根据提示进行安装
+# 官方源(建议使用官方源)
+wget https://repo.anaconda.com/archive/Anaconda3-2022.05-Linux-x86_64.sh
+chmod 755 {Anaconda*.sh}
+./{Anaconda*.sh}  # 根据提示进行安装
+# conda初始化
+{Install Path}/bin/conda init
 ## 环境变量
 echo 'export ANACONDA_HOME={Install Path}' >> ~/.bash_profile
 echo 'export PATH=$ANACONDA_HOME/bin:$PATH' >> ~/.bash_profile
-source ~/.bash_profile
+source ~/.bash_profile && source ~/.barchrc
 ## 检查conda是否安装成功
 conda -V
 ## 激活conda默认环境
@@ -148,6 +153,8 @@ conda create -n radar_env python=3.7.9  # 虚拟环境名称为: radar_env
 ## 激活虚拟环境(radar_env)
 source activate radar_env  # 这个两个命令都可以
 conda activate radar_env  # 这个两个命令都可以
+## 查看conda虚拟环境
+conda env list
 ```
 
 ## 二. 项目部署
@@ -171,7 +178,7 @@ tar -zxvf {Program Name}.tar.gz
 ### 2. 获取KEY文件(重要)
 
 - ①把获取到设备SN编码的信息邮箱发送至(alice_engineer@yeah.net)
-- ②替换KEY文件
+- ②KEY文件(替换/拷贝到项目路径下)
 
 ### 3. 安装项目依赖包(重要)
 
