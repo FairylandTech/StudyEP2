@@ -1,9 +1,0 @@
-127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
-::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
-10.0.10.250 fate-M
-10.0.10.251 fate-S
-10.0.10.252 fate-H-M
-10.0.10.253 fate-H-S1
-10.0.10.254 fate-H-S2
-10.0.10.255 fate-RMQ-M
-10.0.11.0 fate-RMQ-S
