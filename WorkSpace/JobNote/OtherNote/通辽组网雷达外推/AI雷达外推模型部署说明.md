@@ -14,11 +14,14 @@
 
 **③屏蔽nouveau驱动**
 
-> 步骤一: 
->>`sudo vim /etc/modprobe.d/blacklist-nouveau.conf`
+> 步骤一:
 >
-> 步骤二: 
->> 写入`blacklist nouveau` 和 `options nouveau modeset=0`
+> `sudo vim /etc/modprobe.d/blacklist-nouveau.conf`
+>
+> 步骤二:
+>
+>> 写入 `blacklist nouveau` 和 `options nouveau modeset=0`
+>>
 
 - 更新 `sudo update-initramfs -u`
 - 重启 `reboot`
@@ -37,7 +40,7 @@
 
 3) 安装 NVIDIA 驱动
 
-**关闭界面** 
+**关闭界面**
 
 ```bash
 sudo service lightdm stop
@@ -52,22 +55,22 @@ sudo service lightdm stop
 **Ubuntu20.04自带驱动安装**
 
 * 查看驱动版本, 并选择需要的版本, 这里选择 nvidia-utils-510-server 版本: `nvidia-smi` 或者 `ubuntu-drivers devices`
-<br/>
-![nvidia-driver](static/invdia-driver-statics/nvidia-driver.png)
-
+  <br/>
+  ![nvidia-driver](static/invdia-driver-statics/nvidia-driver.png)
 * 安装:
+
   ```bash
-  sudo apt-get update  	
-  sudo apt-get install nvidia-headless-no-dkms-510-server	
+  sudo apt-get update  
+  sudo apt-get install nvidia-headless-no-dkms-510-server
   sudo apt-get install nvidia-utils-510-server 
   sudo apt-get install nvidia-dkms-510-server
   ```
-
 * 验证 `nvidia-smi`
 * 长时间监控 `watch -n 1 -d nvidia-smi # 1s刷新一次nvidia-smi命令`
 * 卸载
-  ```bashrc 
-  sudo apt-get autoremove nvidia-headless-no-dkms-510-server	
+
+  ```bashrc
+  sudo apt-get autoremove nvidia-headless-no-dkms-510-server
   sudo apt-get autoremove nvidia-utils-510-server
   sudo apt-get autoremove nvidia-dkms-510-server
   sudo apt-get purge nvidia*
@@ -76,10 +79,10 @@ sudo service lightdm stop
 ### 2. 安装CUDA Toolkit
 
 * 查看显卡驱动对应的cuda版本(右上角CUDA Version版本) `nvidia-smi`
-![nvidia-smi](static/invdia-driver-statics/nvidia-smi.png)
+  ![nvidia-smi](static/invdia-driver-statics/nvidia-smi.png)
 * [官网下载CUDA Toolkit](https://developer.nvidia.com/cuda-toolkit-archive)
 * 选择对应cuda版本和系统, 按照官网提供的方式安装
-![cuda-select](static/invdia-driver-statics/cuda-select.jpg)
+  ![cuda-select](static/invdia-driver-statics/cuda-select.jpg)
   ```bash
   wget https://developer.download.nvidia.com/compute/cuda/11.6.2/local_installers/cuda_11.6.2_510.47.03_linux.run
   sudo sh cuda_11.6.2_510.47.03_linux.run # 记得取消驱动安装, 如果已经安装过驱动了
@@ -92,7 +95,7 @@ sudo service lightdm stop
   ```
 * 更新 `source /etc/profile` 或 `source ~/.bashrc`
 * 验证 `nvcc -V`
-![nvcc](static/invdia-driver-statics/nvcc.png)
+  ![nvcc](static/invdia-driver-statics/nvcc.png)
 * 卸载:
   ```bash
   cd /usr/local/cuda/bin/
@@ -103,7 +106,7 @@ sudo service lightdm stop
 
 * 查看cuda版本: `nvcc -V` 或 `nvidia-smi`
 * [官网下载安装包, 对应cuda版本](https://developer.nvidia.com/rdp/cudnn-download)
-![cudnn-select](static/invdia-driver-statics/cudnn-select.jpg)
+  ![cudnn-select](static/invdia-driver-statics/cudnn-select.jpg)
 * 解压: `cudnn-linux-x86_64-8.4.0.27_cuda11.6-archive.tar.xz`
 * 进入解压目录:
   ```shell
@@ -162,7 +165,7 @@ sudo cat /sys/class/dmi/id/board_serial
 sudo hdparm -i {Disk Mount Point}
 lsblk -dno SERIAL
 ## 解压项目包
-tar -zxvf {Program Name}.tar.gz 
+tar -zxvf {Program Name}.tar.gz
 ```
 
 ### 2. 获取KEY文件(重要)
@@ -178,6 +181,17 @@ tar -zxvf {Program Name}.tar.gz
 pip -V
 cat requirements.txt | grep -v torch > requirements_new.txt
 pip install -r requirements_new.txt
-
-
 ```
+
+**获取pytorch**
+
+1. 获取CUDA版本
+2. 根据CUDA的版本获取[PyTorch](https://pytorch.org), 执行<kbd>Run this Command</kbd>
+
+> **说明**: <font color="red">Package</font>选择<kbd>Pip</kbd>
+>
+> 安装是若提示找不到pip3, 则用pip代替(pip install .........)
+
+<img src="./static/img/pytorch_install.png" alt="PyTorch_install" title="Image"/>
+
+### 4. 运行
