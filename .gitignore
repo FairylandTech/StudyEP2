@@ -2,10 +2,16 @@
 .idea/
 .vscode/
 
-## .pyc路径
+## python
 __pycache__/
 
-## 文件
+## web
+### npm
+#package.json
+#package-lock.json
+node_modules/
+
+## file
 # markdonw 生成的dpf
 *.pdf
 # 压缩包
