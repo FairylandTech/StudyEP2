@@ -1,0 +1,189 @@
+<html><head><meta charset="utf-8" /><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/shuzijun/markdown-editor@2.0.0/src/main/resources/vditor/dist/index.css"/><script src="https://cdn.jsdelivr.net/gh/shuzijun/markdown-editor@2.0.0/src/main/resources/vditor/dist/js/i18n/zh_CN.js"></script><script src="https://cdn.jsdelivr.net/gh/shuzijun/markdown-editor@2.0.0/src/main/resources/vditor/dist/method.min.js"></script></head><body style="width: 1075px;"><div class="vditor-reset" id="preview"><p>[toc]</p>
+<h1 id="AI雷达外推模型部署说明">AI雷达外推模型部署说明<a id="vditorAnchor-AI雷达外推模型部署说明" class="vditor-anchor" href="#AI雷达外推模型部署说明"><svg viewBox="0 0 16 16" version="1.1" width="16" height="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a></h1>
+<h2 id="一--环境部署">一. 环境部署<a id="vditorAnchor-一--环境部署" class="vditor-anchor" href="#一--环境部署"><svg viewBox="0 0 16 16" version="1.1" width="16" height="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a></h2>
+<h3 id="1--安装NVIDIA驱动">1. 安装NVIDIA驱动<a id="vditorAnchor-1--安装NVIDIA驱动" class="vditor-anchor" href="#1--安装NVIDIA驱动"><svg viewBox="0 0 16 16" version="1.1" width="16" height="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a></h3>
+<ol>
+<li>准备工作</li>
+</ol>
+<p><strong>①GNOME需要安装lightdm</strong> <code>sudo apt-get install lightdm</code></p>
+<p><strong>②安装依赖</strong> <code>sudo apt-get install gcc g++ make</code></p>
+<p><strong>③屏蔽nouveau驱动</strong></p>
+<blockquote>
+<p>步骤一:</p>
+<p><code>sudo vim /etc/modprobe.d/blacklist-nouveau.conf</code></p>
+<p>步骤二:</p>
+<blockquote>
+<p>写入 <code>blacklist nouveau</code> 和 <code>options nouveau modeset=0</code></p>
+</blockquote>
+</blockquote>
+<ul>
+<li>更新 <code>sudo update-initramfs -u</code></li>
+<li>重启 <code>reboot</code></li>
+<li>验证(没有任何输出则正确) <code>lsmod | grep nouveau</code></li>
+</ul>
+<p>2修改引导</p>
+<p>确保选项NVIDIA GPU和PCIe网络适配器与相应的驱动程序通信 <code>vim /etc/default/grub</code></p>
+<p>在&quot;GRUB_CMDLINE_LINUX_DEFAULT=&quot;之后，在引号中添加&quot;pci=realloc=off&quot;，如下所示:</p>
+<p><img src="static/invdia-driver-statics/update_grub.png" alt="update_grub" /></p>
+<ul>
+<li>更新grub <code>sudo update-grub</code></li>
+<li>重启 <code>reboot</code></li>
+</ul>
+<ol start="3">
+<li>安装 NVIDIA 驱动</li>
+</ol>
+<p><strong>关闭界面</strong></p>
+<pre><code class="language-bash">sudo service lightdm stop
+</code></pre>
+<p><strong>官网方式安装</strong></p>
+<ul>
+<li><a href="https://www.nvidia.cn/Download/index.aspx?lang=cn">NVIDIA Tesla A100 80G 驱动官网下载</a></li>
+</ul>
+<ul>
+<li>卸载 <code>sh NVIDIA-Linux-x*.run --uninstall</code></li>
+</ul>
+<p><strong>Ubuntu20.04自带驱动安装</strong></p>
+<ul>
+<li>
+<p>查看驱动版本, 并选择需要的版本, 这里选择 nvidia-utils-510-server 版本: <code>nvidia-smi</code> 或者 <code>ubuntu-drivers devices</code><br />
+<br/><br />
+<img src="static/invdia-driver-statics/nvidia-driver.png" alt="nvidia-driver" /></p>
+</li>
+<li>
+<p>安装:</p>
+<pre><code class="language-bash">sudo apt-get update  
+sudo apt-get install nvidia-headless-no-dkms-510-server
+sudo apt-get install nvidia-utils-510-server 
+sudo apt-get install nvidia-dkms-510-server
+</code></pre>
+</li>
+<li>
+<p>验证 <code>nvidia-smi</code></p>
+</li>
+<li>
+<p>长时间监控 <code>watch -n 1 -d nvidia-smi # 1s刷新一次nvidia-smi命令</code></p>
+</li>
+<li>
+<p>卸载</p>
+<pre><code class="language-bashrc">sudo apt-get autoremove nvidia-headless-no-dkms-510-server
+sudo apt-get autoremove nvidia-utils-510-server
+sudo apt-get autoremove nvidia-dkms-510-server
+sudo apt-get purge nvidia*
+</code></pre>
+</li>
+</ul>
+<h3 id="2--安装CUDA-Toolkit">2. 安装CUDA Toolkit<a id="vditorAnchor-2--安装CUDA-Toolkit" class="vditor-anchor" href="#2--安装CUDA-Toolkit"><svg viewBox="0 0 16 16" version="1.1" width="16" height="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a></h3>
+<ul>
+<li>查看显卡驱动对应的cuda版本(右上角CUDA Version版本) <code>nvidia-smi</code><br />
+<img src="static/invdia-driver-statics/nvidia-smi.png" alt="nvidia-smi" /></li>
+<li><a href="https://developer.nvidia.com/cuda-toolkit-archive">官网下载CUDA Toolkit</a></li>
+<li>选择对应cuda版本和系统, 按照官网提供的方式安装<br />
+<img src="static/invdia-driver-statics/cuda-select.jpg" alt="cuda-select" />
+<pre><code class="language-bash">wget https://developer.download.nvidia.com/compute/cuda/11.6.2/local_installers/cuda_11.6.2_510.47.03_linux.run
+sudo sh cuda_11.6.2_510.47.03_linux.run # 记得取消驱动安装, 如果已经安装过驱动了
+</code></pre>
+</li>
+<li>添加环境变量: <code>vim /etc/profile # 全局</code> 或者 <code>vim ~/.bashrc # 当前用户</code>
+<pre><code class="language-bash">export PATH=/usr/local/cuda-11.6/bin${PATH:+:${PATH}}  
+export LD_LIBRARY_PATH=/usr/local/cuda-11.6/lib64${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
+export CUDA_HOME=/usr/local/cuda
+</code></pre>
+</li>
+<li>更新 <code>source /etc/profile</code> 或 <code>source ~/.bashrc</code></li>
+<li>验证 <code>nvcc -V</code><br />
+<img src="static/invdia-driver-statics/nvcc.png" alt="nvcc" /></li>
+<li>卸载:
+<pre><code class="language-bash">cd /usr/local/cuda/bin/
+sudo ./cuda-uninstaller
+</code></pre>
+</li>
+</ul>
+<h3 id="3--安装CuDNN">3. 安装CuDNN<a id="vditorAnchor-3--安装CuDNN" class="vditor-anchor" href="#3--安装CuDNN"><svg viewBox="0 0 16 16" version="1.1" width="16" height="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a></h3>
+<ul>
+<li>查看cuda版本: <code>nvcc -V</code> 或 <code>nvidia-smi</code></li>
+<li><a href="https://developer.nvidia.com/rdp/cudnn-download">官网下载安装包, 对应cuda版本</a><br />
+<img src="static/invdia-driver-statics/cudnn-select.jpg" alt="cudnn-select" /></li>
+<li>解压: <code>cudnn-linux-x86_64-8.4.0.27_cuda11.6-archive.tar.xz</code></li>
+<li>进入解压目录:
+<pre><code class="language-shell">sudo cd cudnn-linux-x86_64-8.4.0.27_cuda11.6-archive/
+sudo cp include/cudnn.h /usr/local/cuda/include
+sudo cp include/cudnn_version.h /usr/local/cuda/include
+sudo cp lib64/libcudnn* /usr/local/cuda/lib64
+sudo chmod a+r /usr/local/cuda/include/cudnn.h /usr/local/cuda/include/cudnn_version.h /usr/local/cuda/lib64/libcudnn*
+</code></pre>
+</li>
+<li>验证: <code>cat /usr/local/cuda/include/cudnn_version.h | grep CUDNN_MAJOR -A 2</code></li>
+<li>卸载:
+<pre><code class="language-shell">sudo rm -rf /usr/local/cuda/include/cudnn.h
+sudo rm -rf /usr/local/cuda/include/cudnn_version.h
+sudo rm -rf /usr/local/cuda/lib64/libcudnn*
+</code></pre>
+</li>
+</ul>
+<h3 id="4--安装Anaconda并创建激活虚拟环境">4. 安装Anaconda并创建激活虚拟环境<a id="vditorAnchor-4--安装Anaconda并创建激活虚拟环境" class="vditor-anchor" href="#4--安装Anaconda并创建激活虚拟环境"><svg viewBox="0 0 16 16" version="1.1" width="16" height="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a></h3>
+<pre><code class="language-bash">## 安装
+# 国内源
+wget https://mirrors.tuna.tsinghua.edu.cn/anaconda/archive/Anaconda3-5.3.1-Linux-x86_64.sh
+# 官方源(建议使用官方源)
+wget https://repo.anaconda.com/archive/Anaconda3-2022.05-Linux-x86_64.sh
+chmod 755 {Anaconda*.sh}
+./{Anaconda*.sh}  # 根据提示进行安装
+# conda初始化
+{Install Path}/bin/conda init
+## 环境变量
+echo 'export ANACONDA_HOME={Install Path}' &gt;&gt; ~/.bash_profile
+echo 'export PATH=$ANACONDA_HOME/bin:$PATH' &gt;&gt; ~/.bash_profile
+source ~/.bash_profile &amp;&amp; source ~/.barchrc
+## 检查conda是否安装成功
+conda -V
+## 激活conda默认环境
+source activate  # 这个两个命令都可以
+conda activate  # 这个两个命令都可以
+## 退出虚拟conda默认环境
+source deactivate  # 这个两个命令都可以
+conda deactivate  # 这个两个命令都可以
+## 创建虚拟环境
+conda create -n radar_env python=3.7.9  # 虚拟环境名称为: radar_env
+## 激活虚拟环境(radar_env)
+source activate radar_env  # 这个两个命令都可以
+conda activate radar_env  # 这个两个命令都可以
+## 查看conda虚拟环境
+conda env list
+</code></pre>
+<h2 id="二--项目部署">二. 项目部署<a id="vditorAnchor-二--项目部署" class="vditor-anchor" href="#二--项目部署"><svg viewBox="0 0 16 16" version="1.1" width="16" height="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a></h2>
+<h3 id="1--获取设备SN编码并解压项目tar-gz包">1. 获取设备SN编码并解压项目tar.gz包<a id="vditorAnchor-1--获取设备SN编码并解压项目tar-gz包" class="vditor-anchor" href="#1--获取设备SN编码并解压项目tar-gz包"><svg viewBox="0 0 16 16" version="1.1" width="16" height="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a></h3>
+<pre><code class="language-bash">## 获取设备SN编码
+# CPU ID
+sudo dmidecode -t 4 | grep ID
+# 主板序列号
+sudo dmidecode -t 2 | grep Serial
+sudo cat /sys/class/dmi/id/board_serial
+# 硬盘
+sudo hdparm -i {Disk Mount Point}
+lsblk -dno SERIAL
+## 解压项目包
+tar -zxvf {Program Name}.tar.gz
+</code></pre>
+<h3 id="2--获取KEY文件-重要-">2. 获取KEY文件(重要)<a id="vditorAnchor-2--获取KEY文件-重要-" class="vditor-anchor" href="#2--获取KEY文件-重要-"><svg viewBox="0 0 16 16" version="1.1" width="16" height="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a></h3>
+<ul>
+<li>①把获取到设备SN编码的信息邮箱发送至(alice_engineer@yeah.net)</li>
+<li>②KEY文件(替换/拷贝到项目路径下)</li>
+</ul>
+<h3 id="3--安装项目依赖包-重要-">3. 安装项目依赖包(重要)<a id="vditorAnchor-3--安装项目依赖包-重要-" class="vditor-anchor" href="#3--安装项目依赖包-重要-"><svg viewBox="0 0 16 16" version="1.1" width="16" height="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a></h3>
+<p><strong>在radar_env虚拟环境下</strong></p>
+<pre><code class="language-bash">pip -V
+cat requirements.txt | grep -v torch &gt; requirements_new.txt
+pip install -r requirements_new.txt
+</code></pre>
+<p><strong>获取pytorch</strong></p>
+<ol>
+<li>获取CUDA版本</li>
+<li>根据CUDA的版本获取<a href="https://pytorch.org">PyTorch</a>, 执行<kbd>Run this Command</kbd></li>
+</ol>
+<blockquote>
+<p><strong>说明</strong>: <font color="red">Package</font>选择<kbd>Pip</kbd></p>
+<p>安装是若提示找不到pip3, 则用pip代替(pip install .........)</p>
+</blockquote>
+<img src="./static/img/pytorch_install.png" alt="PyTorch_install" title="Image"/>
+<h3 id="4--运行">4. 运行<a id="vditorAnchor-4--运行" class="vditor-anchor" href="#4--运行"><svg viewBox="0 0 16 16" version="1.1" width="16" height="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a></h3>
+</div><script>    const previewElement = document.getElementById('preview');    Vditor.setContentTheme('idea-light', 'https://cdn.jsdelivr.net/gh/shuzijun/markdown-editor@2.0.0/src/main/resources/vditor/dist/css/content-theme');    Vditor.codeRender(previewElement);    Vditor.highlightRender({"enable":true,"lineNumber":false,"style":"github"}, previewElement, 'https://cdn.jsdelivr.net/gh/shuzijun/markdown-editor@2.0.0/src/main/resources/vditor');    Vditor.mathRender(previewElement, { cdn: 'https://cdn.jsdelivr.net/gh/shuzijun/markdown-editor@2.0.0/src/main/resources/vditor',math: {"engine":"KaTeX","inlineDigit":true,"macros":{}}});    Vditor.mermaidRender(previewElement, 'https://cdn.jsdelivr.net/gh/shuzijun/markdown-editor@2.0.0/src/main/resources/vditor', 'light');    Vditor.flowchartRender(previewElement, 'https://cdn.jsdelivr.net/gh/shuzijun/markdown-editor@2.0.0/src/main/resources/vditor');    Vditor.graphvizRender(previewElement, 'https://cdn.jsdelivr.net/gh/shuzijun/markdown-editor@2.0.0/src/main/resources/vditor');    Vditor.chartRender(previewElement, 'https://cdn.jsdelivr.net/gh/shuzijun/markdown-editor@2.0.0/src/main/resources/vditor', 'light');    Vditor.mindmapRender(previewElement, 'https://cdn.jsdelivr.net/gh/shuzijun/markdown-editor@2.0.0/src/main/resources/vditor', 'light');    Vditor.abcRender(previewElement, 'https://cdn.jsdelivr.net/gh/shuzijun/markdown-editor@2.0.0/src/main/resources/vditor');    Vditor.mediaRender(previewElement);    Vditor.speechRender(previewElement); </script>  <script src="https://cdn.jsdelivr.net/gh/shuzijun/markdown-editor@2.0.0/src/main/resources/vditor/dist/js/icons/ant.js"></script></body></html>

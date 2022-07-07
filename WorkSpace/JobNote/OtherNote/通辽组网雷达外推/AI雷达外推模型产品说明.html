@@ -1,0 +1,128 @@
+<html><head><meta charset="utf-8" /><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/shuzijun/markdown-editor@2.0.0/src/main/resources/vditor/dist/index.css"/><script src="https://cdn.jsdelivr.net/gh/shuzijun/markdown-editor@2.0.0/src/main/resources/vditor/dist/js/i18n/zh_CN.js"></script><script src="https://cdn.jsdelivr.net/gh/shuzijun/markdown-editor@2.0.0/src/main/resources/vditor/dist/method.min.js"></script></head><body style="width: 1075px;"><div class="vditor-reset" id="preview"><p>[toc]</p>
+<h1 id="AI雷达外推模型">AI雷达外推模型<a id="vditorAnchor-AI雷达外推模型" class="vditor-anchor" href="#AI雷达外推模型"><svg viewBox="0 0 16 16" version="1.1" width="16" height="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a></h1>
+<h2 id="1--产品概述">1. 产品概述<a id="vditorAnchor-1--产品概述" class="vditor-anchor" href="#1--产品概述"><svg viewBox="0 0 16 16" version="1.1" width="16" height="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a></h2>
+<p>基于实况雷达回波数据, 对未来1小时天气情况进行预测</p>
+<h2 id="2--技术支撑">2. 技术支撑<a id="vditorAnchor-2--技术支撑" class="vditor-anchor" href="#2--技术支撑"><svg viewBox="0 0 16 16" version="1.1" width="16" height="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a></h2>
+<p>项目采用生成对抗网络（GAN: Generative Adversarial Network）技术，实现强对流天气的识别，其核心是一个生成网络和一个判别网络，在原始图像A映射时 GA→B 可以产生一个图像XAB ∈ Bfake</p>
+<p>生成网络做映射即GA→B(XB)，判别网络D的作用是判断XAB与XB的距离，当距离很大的时候，则认为GA→B不合格，直到D不能判断出两者距离有明显差别。</p>
+<img src="https://file.share.alicehome.ltd/pic/markdown/other/png.01.png" alt="png.01" title="Pic">
+<h2 id="3--外推检验">3. 外推检验<a id="vditorAnchor-3--外推检验" class="vditor-anchor" href="#3--外推检验"><svg viewBox="0 0 16 16" version="1.1" width="16" height="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a></h2>
+<p>将对应的<font color=#ff0000>雷达外推图像</font>与<font color=#ff0000>雷达实测图像</font>做相似性检验<br />
+检验对象为≥35dBZ的雷达回波，系统将自动识别 Fcst 和 Obs 中满足该阈值的对象，并分别变化标注在第三组图片中;≥25dBZ 的雷达回波范围将合并显示，如第二组图像中填色区域<br />
+右侧表格显示为 Fcst 和 Obs 中，识别对象之间的匹配度，如Fcst中对象21与Obs对象18相似度为98.21%</p>
+<h2 id="4--运行环境">4. 运行环境<a id="vditorAnchor-4--运行环境" class="vditor-anchor" href="#4--运行环境"><svg viewBox="0 0 16 16" version="1.1" width="16" height="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a></h2>
+<ul>
+<li>硬件配置</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>内容</th>
+<th>配置</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>操作系统</td>
+<td>Ubuntu18.04LTS/RedHat7.2及以上</td>
+<td>需要安装好GNOME</td>
+</tr>
+<tr>
+<td>NVIDIA 显卡</td>
+<td>NVIDIA GeForce RTX 3060(12GB)(消费级显示卡) 及以上</td>
+<td>需要安装好显卡驱动</td>
+</tr>
+<tr>
+<td>内存</td>
+<td>8GB及以上</td>
+<td>推荐16GB+</td>
+</tr>
+<tr>
+<td>CPU</td>
+<td>4core 2.8GHz及以上</td>
+<td>推荐 3.2GHz</td>
+</tr>
+<tr>
+<td>硬盘</td>
+<td>200G及以上(操作系统占用除外)</td>
+<td>程序运行过程中会产生一些日志(推荐500GB+)</td>
+</tr>
+<tr>
+<td>网卡</td>
+<td>100Mbps以太网卡及以上</td>
+<td>推荐1000Mbps以太网卡</td>
+</tr>
+</tbody>
+</table>
+<p><strong><font color="red" size="5">注意:</font></strong></p>
+<ol>
+<li><font color="red">配置显卡时, 按需配置电源</font></li>
+</ol>
+<h2 id="5--数据处理">5. 数据处理<a id="vditorAnchor-5--数据处理" class="vditor-anchor" href="#5--数据处理"><svg viewBox="0 0 16 16" version="1.1" width="16" height="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a></h2>
+<ol>
+<li>数据输入</li>
+</ol>
+<p>多个雷达基数据解析为图像数据的数据集(一个数据集为20张时间连续且回波较强雷达图像)</p>
+<ol start="2">
+<li>数据输出</li>
+</ol>
+<p>1小时后雷达预测数据</p>
+<ol start="3">
+<li><font color="red"><strong>数据调用</strong></font></li>
+</ol>
+<blockquote>
+<p><font color="red">数据输入输出均为项目运行服务器的指定路径下</font></p>
+</blockquote>
+<pre><code class="language-bash"># 1. 数据输入路径
+/home/app/img_src/
+# 2. 数据输出路径
+/home/app/predict_output/
+</code></pre>
+<blockquote>
+<p>输出数据调用方式可以采用SMB/FTP/SFTP/Nginx等</p>
+</blockquote>
+<h2 id="6--安装与部署">6. 安装与部署<a id="vditorAnchor-6--安装与部署" class="vditor-anchor" href="#6--安装与部署"><svg viewBox="0 0 16 16" version="1.1" width="16" height="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a></h2>
+<ol>
+<li>部署路径</li>
+</ol>
+<pre><code class="language-bash">/root/radar_extraplation_tongliao_kpl
+</code></pre>
+<ol start="3">
+<li>启动方式</li>
+</ol>
+<pre><code class="language-bash"># 1. 激活conda虚拟环境
+# 虚拟环境名称--&gt; radar_env
+source activate radar_env
+# 2. 启动程序
+# 2.1 前台启动
+python /root/radar_extraplation_tongliao_kpl/run.py
+# 2.2 后台无日志启动
+python /root/radar_extraplation_tongliao_kpl/run.py
+# 2.2 后台指定日志位置启动
+python /root/radar_extraplation_tongliao_kpl/run.py &gt;&gt; {logs path} &amp;
+</code></pre>
+<ol start="4">
+<li>停止方式</li>
+</ol>
+<pre><code class="language-bash"># 1. 前台Ctrl+c
+# 2. 后台启动方式停止
+kill $(ps -fe | grep -v grep | grep run.py | awk '{print $2}')
+# ** 如有僵尸进程请使用 kill PPID
+</code></pre>
+<h2 id="7--维护与管理">7. 维护与管理<a id="vditorAnchor-7--维护与管理" class="vditor-anchor" href="#7--维护与管理"><svg viewBox="0 0 16 16" version="1.1" width="16" height="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a></h2>
+<ol>
+<li>日志事件</li>
+</ol>
+<p>日志地址</p>
+<pre><code class="language-bash">/root/log/radar_extraplation_tongliao_kpl.log
+</code></pre>
+<ol start="2">
+<li>注意事项</li>
+</ol>
+<ol>
+<li>确保操作系统永久静止更新</li>
+<li>确保操作系统GNOME模式不进行&quot;休眠&quot;</li>
+<li>项目启动使用root用户启动</li>
+</ol>
+</div><script>    const previewElement = document.getElementById('preview');    Vditor.setContentTheme('idea-light', 'https://cdn.jsdelivr.net/gh/shuzijun/markdown-editor@2.0.0/src/main/resources/vditor/dist/css/content-theme');    Vditor.codeRender(previewElement);    Vditor.highlightRender({"enable":true,"lineNumber":false,"style":"github"}, previewElement, 'https://cdn.jsdelivr.net/gh/shuzijun/markdown-editor@2.0.0/src/main/resources/vditor');    Vditor.mathRender(previewElement, { cdn: 'https://cdn.jsdelivr.net/gh/shuzijun/markdown-editor@2.0.0/src/main/resources/vditor',math: {"engine":"KaTeX","inlineDigit":true,"macros":{}}});    Vditor.mermaidRender(previewElement, 'https://cdn.jsdelivr.net/gh/shuzijun/markdown-editor@2.0.0/src/main/resources/vditor', 'light');    Vditor.flowchartRender(previewElement, 'https://cdn.jsdelivr.net/gh/shuzijun/markdown-editor@2.0.0/src/main/resources/vditor');    Vditor.graphvizRender(previewElement, 'https://cdn.jsdelivr.net/gh/shuzijun/markdown-editor@2.0.0/src/main/resources/vditor');    Vditor.chartRender(previewElement, 'https://cdn.jsdelivr.net/gh/shuzijun/markdown-editor@2.0.0/src/main/resources/vditor', 'light');    Vditor.mindmapRender(previewElement, 'https://cdn.jsdelivr.net/gh/shuzijun/markdown-editor@2.0.0/src/main/resources/vditor', 'light');    Vditor.abcRender(previewElement, 'https://cdn.jsdelivr.net/gh/shuzijun/markdown-editor@2.0.0/src/main/resources/vditor');    Vditor.mediaRender(previewElement);    Vditor.speechRender(previewElement); </script>  <script src="https://cdn.jsdelivr.net/gh/shuzijun/markdown-editor@2.0.0/src/main/resources/vditor/dist/js/icons/ant.js"></script></body></html>
