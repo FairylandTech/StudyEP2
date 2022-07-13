@@ -20,6 +20,8 @@ node_modules/
 *.tar.gz
 *.zip
 *.rar
+# Other
+999.TestFolder/**/*.txt
 
 
 
