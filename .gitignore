@@ -22,6 +22,7 @@ node_modules/
 *.rar
 # Other
 999.TestFolder/**/*.txt
+999.TestFolder/**/*.bin
 
 
 

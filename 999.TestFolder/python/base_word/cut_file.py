@@ -2,6 +2,7 @@
 import os
 
 filename = "result.txt"  # 需要进行分割的文件
+# size = 10000000
 size = 350000
 
 
@@ -15,12 +16,12 @@ def mk_SubFile(srcName, sub, buf):
 
 
 def split_By_size(filename, size):
-    with open(filename, 'r', encoding='utf-8') as fin:
-        buf = fin.read(size)
+    with open(filename, 'r', encoding='utf-8') as f:
+        buf = f.read(size)
         sub = 1
         while len(buf) > 0:
             sub = mk_SubFile(filename, sub, buf)
-            buf = fin.read(size)
+            buf = f.read(size)
     print("ok")
 
 
