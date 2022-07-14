@@ -3,7 +3,10 @@ import os
 
 filename = "result.txt"  # 需要进行分割的文件
 # size = 10000000
-size = 350000
+# 百度输入法
+# size = 350000
+#　搜狗输入法
+size = 20000000
 
 
 def mk_SubFile(srcName, sub, buf):
