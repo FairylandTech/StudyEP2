@@ -21,8 +21,8 @@ node_modules/
 *.zip
 *.rar
 # Other
-999.TestFolder/**/*.txt
-999.TestFolder/**/*.bin
+zzz_test_folder/**/*.txt
+zzz_test_folder/**/*.bin
 
 
 
