@@ -17,6 +17,7 @@ app.config.from_object(app_config.DefaultConfig)
 app.config.from_pyfile(filename='./config/settings.py')
 app.config.from_pyfile(filename='./config/settings.ini')
 # 环境变量配置中加载
+# app.config.from_envvar(variable_name='CONFIG')
 # //
 
 
@@ -30,6 +31,7 @@ def hello_world():
     print(app.config.get('SESSION'))
     print(app.config.get('TOKEN'))
     # 环境变量加载
+    # print(app.config.get('TOKEN'))
     # //
     return 'Hello World!'
 
