@@ -1,4 +1,4 @@
-from run import Flask
+from flask import Flask
 from config import app_config
 
 # factory modules 
