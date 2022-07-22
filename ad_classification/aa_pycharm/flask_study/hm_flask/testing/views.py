@@ -3,10 +3,10 @@ import testing
 from werkzeug.routing import BaseConverter
 # 自定义转换器
 from config.testing.converter import TelConverter
-import run
+from run_release_version_1_0_0 import study_app
 
 
-run.study_app.url_map.converters['tel'] = TelConverter
+study_app.url_map.converters['tel'] = TelConverter
 
 
 @testing.test_api.route(rule='/root')

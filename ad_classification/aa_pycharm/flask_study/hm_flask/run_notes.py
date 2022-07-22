@@ -1,6 +1,6 @@
 # 基础模块
 from flask import Flask
-import factory_moduls
+import factory_module
 from config import app_config
 # 转换器
 from werkzeug.routing import BaseConverter
@@ -33,7 +33,7 @@ from testing import views
 # 工厂模式: 
 # 1. 定义工厂函数, 封装创建程序的实例
 # 2. 定义工厂函数的参数, 可以根据函数的不同, 生成不同的app
-study_app = factory_moduls.FactoryModules.create_study(app_config.DefaultConfig)
+study_app = factory_module.FactoryModules.create_study(app_config.DefaultConfig)
 
 ##　蓝图
 ### 蓝图对象
