@@ -47,7 +47,7 @@ study_app = FactoryModules.create_study(config_name=app_config.DefaultConfig)
 #　蓝图
 ## 蓝图对象
 bp = Blueprint(name='bp', import_name=__name__, url_prefix='/root/')
-
+ 
 
 # 定义路由和视图函数
 @study_app.route('/root', methods=['GET'])
