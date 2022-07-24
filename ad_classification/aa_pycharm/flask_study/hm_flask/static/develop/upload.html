@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>from标签</title>
+    <link rel="stylesheet" href="../../static/node_modules/bootstrap/dist/css/bootstrap.css">
+    <style>
+        .h {
+            color: #FF0000;
+            text-align: center;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+<h1 class="h">保存图片</h1>
+<!--action:后端接口
+    method:http类型
+    enctype:文件上传-->
+<form action="http://127.0.0.1:8001/uploads/images" method="post" enctype="multipart/form-data">
+        <!--file:提交文件-->
+        <div class="mb-3">
+            <label for="formFile" class="form-label">请选择要上传的图片: </label>
+            <input class="form-control" type="file" name="image">
+        </div>
+        <div class="d-grid gap-2">
+            <input class="btn btn-primary" type="submit" value="上传">
+        </div>
+    </form>
+</body>
+</html>
