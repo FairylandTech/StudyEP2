@@ -6,6 +6,9 @@ class DefaultConfig:
     MYSQL_URL = 'mysql address'
     REDIS_URL = 'redis address'
     
+    # Session 
+    SECRET_KEY = 'secret key'
+    
 
 class ProductionConfig:
     
