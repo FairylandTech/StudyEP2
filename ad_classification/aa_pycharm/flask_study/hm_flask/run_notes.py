@@ -111,8 +111,8 @@ def index():
     # form 表单查询
     form_data_user = request.form.get('user')
     form_data_passwd = request.form.get('passwd')
-    print(f'user={form_data_user}, passwd={form_data_passwd}')
-    print(request.headers)
+    # print(f'user={form_data_user}, passwd={form_data_passwd}')
+    # print(request.headers)
     return 'Hello'
 
 
@@ -182,8 +182,33 @@ def error_msg():
 # 捕捉异常状态码, 返回新页面
 @study_app.errorhandler(404)
 def error_page(e):
-    # return redirect(location='https://baidu.com')
-    return f'{e}'
+    print(f'捕捉异常: {type(e)}')
+    return render_template('404.html')
+
+
+# 请求钩子
+# 请求前执行
+@study_app.before_first_request
+def first_request():
+    pass
+    # return 'Before First Request Run!'
+
+
+@study_app.before_request
+def before_request():
+    pass
+    # print('Before Request Run')
+
+
+# 请求后执行
+@study_app.after_request
+def after_request(response):
+    return response
+
+
+@study_app.teardown_request
+def teardown_request(error):
+    return f'请求后异常信息: {error}'
 
 
 # 程序入口
