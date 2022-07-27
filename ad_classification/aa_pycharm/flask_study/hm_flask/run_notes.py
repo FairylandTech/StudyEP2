@@ -28,6 +28,8 @@ from flask import make_response
 from flask import session
 # 异常处理 abort
 from flask import abort
+# g 对象
+from flask import g, current_app
 
 # 配置文件的加载
 # 配置对象中加载
@@ -175,15 +177,21 @@ def get_session():
 @study_app.route(rule='/abort')
 def error_msg():
     # abort 本质上类似于 raise 语句, 只能抛出符合http协议的异常状态码
-    abort(302)
-    return 'Hello World'
+    static_code = abort(404)
+    return static_code
 
 
 # 捕捉异常状态码, 返回新页面
 @study_app.errorhandler(404)
-def error_page(e):
-    print(f'捕捉异常: {type(e)}')
+def error_page(error):
+    print(f'捕捉异常: {error}')
     return render_template('404.html')
+
+
+@study_app.errorhandler(500)
+def redirect_page(error):
+    print(f'捕捉异常: {error}')
+    return redirect(location='https://baidu.com')
 
 
 # 请求钩子
@@ -209,6 +217,22 @@ def after_request(response):
 @study_app.teardown_request
 def teardown_request(error):
     return f'请求后异常信息: {error}'
+
+
+# g 对象
+def db_query():
+    user_id = g.user_id
+    user_name = g.user_name
+    return user_id, user_name
+
+
+@study_app.route(rule='/g')
+def g_object():
+    # g 对象来临时存储
+    g.user_id = 1
+    g.user_name  = 'Alice'
+    db_query()
+    return f'{g.user_id}, {g.user_name}'
 
 
 # 程序入口
