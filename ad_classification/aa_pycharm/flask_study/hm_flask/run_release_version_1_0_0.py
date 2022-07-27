@@ -8,6 +8,7 @@ from config.release.config import DefaultConfig, DevelopmentConfig, ProductionCo
 from werkzeug.routing import BaseConverter
 # 蓝图模块
 from release import release_blueprint
+from release import root_blueprint
 from release import views
 
 
@@ -16,6 +17,7 @@ from release import views
 release_app = FactoryModules.create_app_release(config_name=DefaultConfig)
 # 注册蓝图
 release_app.register_blueprint(blueprint=release_blueprint)
+release_app.register_blueprint(blueprint=root_blueprint)
 
 
 if __name__ == '__main__':
