@@ -20,4 +20,6 @@ E-mail(Chinese Mainland):Private.profession@foxmail.com
 E-mail(Global)alice.engineer.pro@gmail.com
 ```
 
+# Authority management
 
+- Admin: AliceEngineerPro
