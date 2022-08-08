@@ -235,7 +235,7 @@ cd /data/projects/common/hadoop/etc/hadoop
 
 **加入**：export JAVA_HOME=/data/projects/common/jdk/jdk1.8.0_192
 
-**/data/projects/common/Hadoop/etc/hadoop目录下修改core-site.xml、hdfs-site.xml、mapred-site.xml、yarn-site.xml配置，需要根据实际情况修改里面的IP主机名、目录等。参考如下**
+**/data/projects/common/hadoop/etc/hadoop目录下修改core-site.xml、hdfs-site.xml、mapred-site.xml、yarn-site.xml配置，需要根据实际情况修改里面的IP主机名、目录等。参考如下**
 
 - core-site.xml
 
