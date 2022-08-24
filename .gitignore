@@ -23,8 +23,6 @@ node_modules/
 # Other
 zzz_test_folder/**/*.txt
 zzz_test_folder/**/*.bin
+# log
+*.log
 
-
-
-## 测试
-dist/
