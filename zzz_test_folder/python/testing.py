@@ -30,4 +30,10 @@ def list_repeat():
     
 
 if __name__ == '__main__':
-    print(list_repeat())
+    # print(list_repeat())
+    a = 100
+    b = 10
+    if not a % b:
+        print(f'{a}/{b}={a//b}')
+    else:
+        print(a % b)
