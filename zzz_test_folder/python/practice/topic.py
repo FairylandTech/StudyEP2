@@ -1,8 +1,11 @@
 # coding: utf-8
+
+
 import math
 import numbers
 import time
 import logging
+import datetime
 
 logging.basicConfig(level=logging.DEBUG,
                     filename='./topic_error.log',
@@ -204,7 +207,7 @@ class Topics:
             if index == math.pow(high, 3) + math.pow(medium, 3) + math.pow(low, 3):
                 result.append(index)
         return result
-    
+
     @classmethod
     def case_014(cls, number: int):
         """
@@ -229,7 +232,7 @@ class Topics:
                         number = number // index
                     break
         return result
-    
+
     @classmethod
     def case_015(cls, grade: int):
         """
@@ -242,6 +245,17 @@ class Topics:
             return 'B'
         else:
             return 'C'
+
+    @classmethod
+    def case_016(cls):
+        """
+        输出指定格式的日期。
+        使用datatime模块
+        :return: 
+        """
+        # 只有日期 没有时间
+        result = datetime.date.today().strftime('%Y-%m-%d')
+        return result
 
 
 if __name__ == '__main__':
@@ -261,3 +275,4 @@ if __name__ == '__main__':
     print(f'case_013: {Topics.case_013()}\n{cut_line}')
     print(f'case_014: {Topics.case_014(number=2)}\n{cut_line}')
     print(f'case_015: {Topics.case_015(grade=88)}\n{cut_line}')
+    print(f'case_016: {Topics.case_016()}\n{cut_line}')
