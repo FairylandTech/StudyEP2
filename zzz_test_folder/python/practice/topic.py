@@ -215,8 +215,33 @@ class Topics:
         (2)如果n<>k，但n能被k整除，则应打印出k的值，并用n除以k的商,作为新的正整数你n,重复执行第一步。
         (3)如果n不能被k整除，则用k+1作为k的值,重复执行第一步。
         """
-        
-        return True
+        result = f'{number}='
+        status = True
+        while status:
+            for index in range(2, number + 1):
+                if not number % index:
+                    if index == number:
+                        status = False
+                        result += str(index)
+                    else:
+                        s = str(index) + '*'
+                        result += s
+                        number = number // index
+                    break
+        return result
+    
+    @classmethod
+    def case_015(cls, grade: int):
+        """
+        利用条件运算符的嵌套来完成此题：学习成绩>=90分的同学用A表示，60-89分之间的用B表示，60分以下的用C表示。
+        :return: 
+        """
+        if grade >= 90:
+            return 'A'
+        elif 60 <= grade <= 89:
+            return 'B'
+        else:
+            return 'C'
 
 
 if __name__ == '__main__':
@@ -234,4 +259,5 @@ if __name__ == '__main__':
     print(f'case_011: {Topics.case_011()}\n{cut_line}')
     print(f'case_012: {Topics.case_012()}\n{cut_line}')
     print(f'case_013: {Topics.case_013()}\n{cut_line}')
-    print(f'case_014: {Topics.case_014(number=1)}\n{cut_line}')
+    print(f'case_014: {Topics.case_014(number=2)}\n{cut_line}')
+    print(f'case_015: {Topics.case_015(grade=88)}\n{cut_line}')
