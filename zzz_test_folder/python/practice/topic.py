@@ -1,5 +1,6 @@
 # coding: utf-8
 import math
+import numbers
 import time
 import logging
 
@@ -111,24 +112,24 @@ class Topics:
         将一个列表的数据复制到另一个列表中。
         :return: 
         """
-        src_list = [1,2, [3, 4], (5, 6), {'index': 7}, {8, 9}]
+        src_list = [1, 2, [3, 4], (5, 6), {'index': 7}, {8, 9}]
         target_list = src_list.copy()
         return target_list
-    
+
     @classmethod
     def case_008(cls):
         """
         输出 9*9 乘法口诀表
         :return: 
         """
-        for i in range(1,9+1):
-            for j in range(1, 9+1):
-                print(f'{j}x{i}={i*j}\t', end='')
+        for i in range(1, 9 + 1):
+            for j in range(1, 9 + 1):
+                print(f'{j}x{i}={i * j}\t', end='')
                 if i == j:
                     break
             print('\n', end='')
         return True
-    
+
     @classmethod
     def case_009(cls):
         """
@@ -137,7 +138,7 @@ class Topics:
         """
         time.sleep(1)
         return 0
-    
+
     @classmethod
     def case_010(cls):
         """
@@ -148,16 +149,115 @@ class Topics:
         time.sleep(1)
         return result
 
+    @classmethod
+    def case_011(cls):
+        """
+        有一对兔子，从出生后第3个月起每个月都生一对兔子，小兔子长到第三个月后每个月又生一对兔子，假如兔子都不死，问每个月的兔子总数为多少？
+        :return: 
+        """
+        # 第一个月的数量
+        month_1 = 1
+        # 第二个月的数量
+        month_2 = 1
+        result = []
+        for i in range(1, 13):
+            result.append(month_1)
+            result.append(month_2)
+            if (i % 3) == 0:
+                pass
+            # 第三个月的数量
+            month_1 = month_1 + month_2
+            # 第四个月的数量
+            month_2 = month_1 + month_2
+        return result
+
+    @classmethod
+    def case_012(cls):
+        """
+        判断101-200之间有多少个素数，并输出所有素数。
+        :return: 
+        """
+        result = []
+        status = True
+        for num_1 in range(101, 201):
+            for num_2 in range(2, num_1):
+                if num_1 % num_2 == 0:
+                    status = False
+                    break
+            if status is True:
+                result.append(num_1)
+            else:
+                status = True
+        return result, len(result)
+
+    @classmethod
+    def case_013(cls):
+        """
+        打印出所有的"水仙花数"，所谓"水仙花数"是指一个三位数，其各位数字立方和等于该数本身。例如：153是一个"水仙花数"，因为153=1的三次方＋5的三次方＋3的三次方。
+        :return: 
+        """
+        result = []
+        for index in range(100, 1000):
+            high = index // 100
+            medium = index // 10 % 10
+            low = index % 10
+            if index == math.pow(high, 3) + math.pow(medium, 3) + math.pow(low, 3):
+                result.append(index)
+        return result
+    
+    @classmethod
+    def case_014(cls, number: int):
+        """
+        将一个正整数分解质因数。例如：输入90,打印出90=2*3*3*5
+        :return: 
+        程序分析：对n进行分解质因数，应先找到一个最小的质数k，然后按下述步骤完成：
+        (1)如果这个质数恰等于n，则说明分解质因数的过程已经结束，打印出即可。
+        (2)如果n<>k，但n能被k整除，则应打印出k的值，并用n除以k的商,作为新的正整数你n,重复执行第一步。
+        (3)如果n不能被k整除，则用k+1作为k的值,重复执行第一步。
+        """
+        result = f'{number}='
+        status = True
+        while status:
+            for index in range(2, number + 1):
+                if not number % index:
+                    if index == number:
+                        status = False
+                        result += str(index)
+                    else:
+                        s = str(index) + '*'
+                        result += s
+                        number = number // index
+                    break
+        return result
+    
+    @classmethod
+    def case_015(cls, grade: int):
+        """
+        利用条件运算符的嵌套来完成此题：学习成绩>=90分的同学用A表示，60-89分之间的用B表示，60分以下的用C表示。
+        :return: 
+        """
+        if grade >= 90:
+            return 'A'
+        elif 60 <= grade <= 89:
+            return 'B'
+        else:
+            return 'C'
+
 
 if __name__ == '__main__':
     cut_line = '-' * 50
-    print(f'case_a: {Topics.case_001()}\n{cut_line}')
-    print(f'case_b: {Topics.case_002(i=23)}\n{cut_line}')
-    print(f'case_c: {Topics.case_003()}\n{cut_line}')
-    print(f'case_d: {Topics.case_004(year=2021, month=12, day=31)}\n{cut_line}')
-    print(f'case_d: {Topics.case_005(x=2, y=1, z=3)}\n{cut_line}')
-    print(f'case_d: {Topics.case_006()}\n{cut_line}')
-    print(f'case_d: {Topics.case_007()}\n{cut_line}')
-    print(f'case_d: {Topics.case_008()}\n{cut_line}')
-    print(f'case_d: {Topics.case_009()}\n{cut_line}')
-    print(f'case_d: {Topics.case_010()}\n{cut_line}')
+    print(f'case_001: {Topics.case_001()}\n{cut_line}')
+    print(f'case_002: {Topics.case_002(i=23)}\n{cut_line}')
+    print(f'case_003: {Topics.case_003()}\n{cut_line}')
+    print(f'case_004: {Topics.case_004(year=2021, month=12, day=31)}\n{cut_line}')
+    print(f'case_005: {Topics.case_005(x=2, y=1, z=3)}\n{cut_line}')
+    print(f'case_006: {Topics.case_006()}\n{cut_line}')
+    print(f'case_007: {Topics.case_007()}\n{cut_line}')
+    print(f'case_008: {Topics.case_008()}\n{cut_line}')
+    print(f'case_009: {Topics.case_009()}\n{cut_line}')
+    print(f'case_010: {Topics.case_010()}\n{cut_line}')
+    print(f'case_011: {Topics.case_011()}\n{cut_line}')
+    print(f'case_012: {Topics.case_012()}\n{cut_line}')
+    print(f'case_013: {Topics.case_013()}\n{cut_line}')
+    print(f'case_014: {Topics.case_014(number=2)}\n{cut_line}')
+    print(f'case_015: {Topics.case_015(grade=88)}\n{cut_line}')
