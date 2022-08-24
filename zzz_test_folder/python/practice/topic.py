@@ -229,6 +229,19 @@ class Topics:
                         number = number // index
                     break
         return result
+    
+    @classmethod
+    def case_015(cls, grade: int):
+        """
+        利用条件运算符的嵌套来完成此题：学习成绩>=90分的同学用A表示，60-89分之间的用B表示，60分以下的用C表示。
+        :return: 
+        """
+        if grade >= 90:
+            return 'A'
+        elif 60 <= grade <= 89:
+            return 'B'
+        else:
+            return 'C'
 
 
 if __name__ == '__main__':
@@ -247,3 +260,4 @@ if __name__ == '__main__':
     print(f'case_012: {Topics.case_012()}\n{cut_line}')
     print(f'case_013: {Topics.case_013()}\n{cut_line}')
     print(f'case_014: {Topics.case_014(number=2)}\n{cut_line}')
+    print(f'case_015: {Topics.case_015(grade=88)}\n{cut_line}')
