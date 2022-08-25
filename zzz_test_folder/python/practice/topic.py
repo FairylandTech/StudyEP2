@@ -3,6 +3,7 @@
 
 import math
 import numbers
+import re
 import time
 import logging
 import datetime
@@ -280,9 +281,9 @@ class Topics:
                 other_chars += 1
         result = f'字母: {letters}, 空格: {spaces}, 数字 {digits}, 其他字符: {other_chars}'
         return result
-    
+
     @classmethod
-    def case_018(cls, digit:int, number: int):
+    def case_018(cls, digit: int, number: int):
         """
         求s=a+aa+aaa+aaaa+aa...a的值，其中a是一个数字。例如2+22+222+2222+22222(此时共有5个数相加)
         :param digit: a
@@ -294,6 +295,39 @@ class Topics:
             digits = int(str(digit) * index)
             digits_sum += digits
         return digits_sum
+
+    @classmethod
+    def case_019(cls):
+        """
+        一个数如果恰好等于它的因子之和，这个数就称为"完数"。例如6=1＋2＋3.编程找出1000以内的所有完数。
+        :return: 
+        """
+        result = []
+        for digit_index in range(2, 1000):
+            digits_sum = 1
+            for index in range(2, digit_index):
+                if digit_index % index == 0:
+                    digits_sum += index
+            if digits_sum == digit_index:
+                result.append(digit_index)
+        return result
+
+    @classmethod
+    def case_020(cls):
+        """
+        球从100米高度自由落下，每次落地后反跳回原高度的一半；再落下，求它在第10次落地时，共经过多少米？第10次反弹多高？
+        :return: 
+        """
+        height = 100
+        long = height
+        for index in range(1, 11):
+            height /= 2
+            if index == 10:
+                pass
+            else:
+                long += height * 2
+        result = f'高度： {height}, 经过的距离： {long}'
+        return result
 
 
 if __name__ == '__main__':
@@ -311,8 +345,10 @@ if __name__ == '__main__':
     print(f'case_011: {Topics.case_011()}\n{cut_line}')
     print(f'case_012: {Topics.case_012()}\n{cut_line}')
     print(f'case_013: {Topics.case_013()}\n{cut_line}')
-    print(f'case_014: {Topics.case_014(number=2)}\n{cut_line}')
+    print(f'case_014: {Topics.case_014(number=496)}\n{cut_line}')
     print(f'case_015: {Topics.case_015(grade=88)}\n{cut_line}')
     print(f'case_016: {Topics.case_016()}\n{cut_line}')
     print(f'case_017: {Topics.case_017(date="abc 123 ,./ ")}\n{cut_line}')
     print(f'case_018: {Topics.case_018(digit=4, number=4)}\n{cut_line}')
+    print(f'case_019: {Topics.case_019()}\n{cut_line}')
+    print(f'case_020: {Topics.case_020()}\n{cut_line}')
