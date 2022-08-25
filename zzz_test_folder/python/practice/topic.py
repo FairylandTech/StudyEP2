@@ -6,6 +6,7 @@ import numbers
 import time
 import logging
 import datetime
+import string
 
 logging.basicConfig(level=logging.DEBUG,
                     filename='./topic_error.log',
@@ -257,6 +258,43 @@ class Topics:
         result = datetime.date.today().strftime('%Y-%m-%d')
         return result
 
+    @classmethod
+    def case_017(cls, date: str):
+        """
+        输入一行字符，分别统计出其中英文字母、空格、数字和其它字符的个数。
+        :return: 
+        """
+        # init 
+        letters = 0
+        spaces = 0
+        digits = 0
+        other_chars = 0
+        for index in date:
+            if index.isalpha():
+                letters += 1
+            elif index.isspace():
+                spaces += 1
+            elif index.isdigit():
+                digits += 1
+            else:
+                other_chars += 1
+        result = f'字母: {letters}, 空格: {spaces}, 数字 {digits}, 其他字符: {other_chars}'
+        return result
+    
+    @classmethod
+    def case_018(cls, digit:int, number: int):
+        """
+        求s=a+aa+aaa+aaaa+aa...a的值，其中a是一个数字。例如2+22+222+2222+22222(此时共有5个数相加)
+        :param digit: a
+        :param number: 数量
+        :return: 
+        """
+        digits_sum = 0
+        for index in range(1, number + 1):
+            digits = int(str(digit) * index)
+            digits_sum += digits
+        return digits_sum
+
 
 if __name__ == '__main__':
     cut_line = '-' * 50
@@ -276,3 +314,5 @@ if __name__ == '__main__':
     print(f'case_014: {Topics.case_014(number=2)}\n{cut_line}')
     print(f'case_015: {Topics.case_015(grade=88)}\n{cut_line}')
     print(f'case_016: {Topics.case_016()}\n{cut_line}')
+    print(f'case_017: {Topics.case_017(date="abc 123 ,./ ")}\n{cut_line}')
+    print(f'case_018: {Topics.case_018(digit=4, number=4)}\n{cut_line}')
